@@ -1,0 +1,386 @@
+*{
+  margin:   0;
+  padding:  0;
+  box-sizing: border-box;
+}
+li{
+  list-style:       none;
+}
+a{
+  text-decoration: none;
+}
+
+
+/* -------------------------------- 
+
+App
+
+-------------------------------- */
+
+html, body, #app-container{
+  width:    100%;
+  height:   100%;
+  overflow: hidden;
+} 
+
+html{ 
+  font-size: 62.5%;
+  body{
+    font-size:        1.6rem;
+    font-family:      "Fira Sans", sans-serif;
+    color:            #383838;
+    background-color: #f8f8f8;
+    #app-container{
+
+      #App{
+        position: absolute;
+        margin:   0;
+        padding:  0;  
+        width:    100%;
+        height:   100%;
+      }
+
+    
+    }
+  }
+}
+
+
+
+
+/* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+a {
+  color: #7b9d6f;
+  text-decoration: none;
+}
+
+
+
+/* -------------------------------- 
+
+Main Components 
+
+-------------------------------- */
+
+// TimeLine
+.cd-horizontal-timeline {
+  opacity: 1;
+  margin: 2em auto;
+  transition: opacity 0.2s;
+  
+  &::before {
+  /* never visible - this is used in jQuery to check the current MQ */
+  content: 'mobile';
+  display: none;
+}
+  &.loaded {
+    /* show the timeline after events position has been set (using JavaScript) */
+    opacity: 1;
+  }
+
+  
+  .timeline {
+    position: relative;
+    height: 100px;
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .events-wrapper {
+    position: relative;
+    height: 100%;
+    margin: 0 40px;
+    overflow: hidden;
+    &::after, &::before {
+  /* these are used to create a shadow effect at the sides of the timeline */
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  height: 100%;
+  width: 20px;
+}
+    &::before {
+  left: 0;
+  background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0));
+}
+    &::after {
+  right: 0;
+  background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
+}
+  }
+  
+  .filling-line {
+  /* this is used to create the green line filling the timeline */
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #7b9d6f;
+  transform-origin: left center;
+  transition: transform 0.3s;
+}
+  
+  .events{
+    /* this is the grey line/timeline */
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 49px;
+    height: 2px;
+    /* width will be set using JavaScript */
+    background: #dfdfdf;
+    transition: transform 0.4s;
+    a {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    text-align: center;
+    font-size: 1.3rem;
+    padding-bottom: 15px;
+    color: #383838;
+    /* fix bug on Safari - text flickering while timeline translates */
+    transform: translateZ(0);
+    transform: translateX(-50%);
+
+      
+    &::after {
+    /* this is used to create the event spot */
+    content: '';
+    position: absolute;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: -5px;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    border: 2px solid #dfdfdf;
+    background-color: #f8f8f8;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+    &.selected {
+      pointer-events: none;
+    }
+    &.selected::after {
+    background-color: #7b9d6f;
+    border-color: #7b9d6f;
+  }
+    &.older-event::after {
+    border-color: #7b9d6f;
+  }
+        
+    }
+  }
+
+  .events-content {
+    position: relative;
+    width: 100%;
+    margin: 2em 0;
+    overflow: hidden;
+    transition: height 0.4s;
+    
+    li {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      left: 0;
+      top: 0;
+      transform: translateX(-100%);
+      padding: 0 5%;
+      opacity: 0;
+      animation-duration: 0.4s;
+      animation-timing-function: ease-in-out;
+      
+      &.selected {
+        /* visible event content */
+        position: relative;
+        z-index: 2;
+        opacity: 1;
+        transform: translateX(0);
+      }
+      &.enter-right, &.leave-right {
+        animation-name: cd-enter-right;
+      }
+
+      &.enter-left, &.leave-left {
+        animation-name: cd-enter-left;
+      }
+      &.leave-right, &.leave-left {
+        animation-direction: reverse;
+      }
+      
+      > * {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+    }
+    
+    
+    h2 {
+      font-weight: bold;
+      font-size: 2.6rem;
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    em {
+      display: block;
+      font-style: italic;
+      margin: 10px auto;
+    }
+    em::before {
+      content: '- ';
+    }
+    p {
+      font-size: 1.4rem;
+      color: #959595;
+    }
+    em, p {
+    line-height: 1.6;
+  }
+    
+  }
+  
+}
+
+// Hover on points
+.no-touch {
+  .cd-horizontal-timeline {
+    .events {
+      a:hover::after {
+        background-color: #7b9d6f;
+        border-color: #7b9d6f;
+      }
+    }
+  }
+}
+
+// Chevron left/right
+.cd-timeline-navigation{
+  a {
+    /* these are the left/right arrows to navigate the timeline */
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    border: 2px solid #dfdfdf;
+    /* replace text with an icon */
+    overflow: hidden;
+    color: transparent;
+    text-indent: 100%;
+    white-space: nowrap;
+    transition: border-color 0.3s;
+    &::after {
+      /* arrow icon */
+      content: '';
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 50%;
+      top: 50%;
+      bottom: auto;
+      right: auto;
+      transform: translateX(-50%) translateY(-50%);
+      background: url(../img/cd-arrow.svg) no-repeat 0 0;
+    }
+    &.prev {
+      left: 0;
+      transform: translateY(-50%) rotate(180deg);
+    }
+    &.next {
+      right: 0;
+    }
+
+    &.inactive {
+      cursor: not-allowed;
+    }
+    &.inactive::after {
+      background-position: 0 -16px;
+    }
+  }
+}
+
+// Chevron normal
+.no-touch .cd-timeline-navigation {
+    a:hover {
+      border-color: #7b9d6f;
+    }
+}
+// Cevron inactive
+.no-touch .cd-timeline-navigation {
+  a.inactive:hover {
+    border-color: #dfdfdf;
+  }
+}
+// Responsive
+
+@media only screen and (min-width: 1100px) {
+  .cd-horizontal-timeline {
+    margin: 6em auto;
+    &::before {
+      /* never visible - this is used in jQuery to check the current MQ */
+      content: 'desktop';
+    }
+  }
+}
+@media only screen and (min-width: 768px) {
+  .cd-horizontal-timeline{
+    .events-content {
+      h2 {
+        font-size: 7rem;
+      }
+      em {
+        font-size: 2rem;
+      }
+      p {
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+
+@keyframes cd-enter-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes cd-enter-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+
+
+
+

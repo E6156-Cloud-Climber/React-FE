@@ -1,6 +1,8 @@
 import React from 'react';
 
 import ProfilePage from '../ProfilePage';
+import Feed from '../Feed';
+import Post from '../Post';
 
 import {
   Container,
@@ -23,12 +25,12 @@ const Main: React.FC = () => {
         </button>
 
         <ProfileInfo>
-          <strong>Elton Lazzarin</strong>
-          <span>432 Tweets</span>
+          <strong>Explore job posts</strong>
+          <span>432 posts</span>
         </ProfileInfo>
       </Header>
-
-      <ProfilePage />
+      <Post />
+      <Feed />
 
       <BottomMenu>
         <HomeIcon className="active" />
