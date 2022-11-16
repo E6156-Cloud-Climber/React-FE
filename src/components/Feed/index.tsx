@@ -8,10 +8,10 @@ const Feed: React.FC = () => {
   return (
     <Container>
       <Tab>Posts</Tab>
+      <Timeline />
       <Tweets>
         <Tweet />
       </Tweets>
-      <Timeline />
     </Container>
   );
 };

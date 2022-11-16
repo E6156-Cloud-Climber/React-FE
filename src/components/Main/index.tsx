@@ -31,13 +31,6 @@ const Main: React.FC = () => {
       </Header>
       <Post />
       <Feed />
-
-      <BottomMenu>
-        <HomeIcon className="active" />
-        <SearchIcon />
-        <BellIcon />
-        <EmailIcon />
-      </BottomMenu>
     </Container>
   );
 };

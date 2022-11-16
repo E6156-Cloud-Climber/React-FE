@@ -18,43 +18,18 @@ a {
 App
 
 -------------------------------- */
-html, body, #app-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-html {
-  font-size: 62.5%;
-}
-
-html body {
-  font-size: 1.6rem;
-  font-family: "Fira Sans", sans-serif;
-  color: #383838;
-  background-color: #f8f8f8;
-}
-
-html body #app-container #App {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* -------------------------------- 
 
 Primary style
 
 -------------------------------- */
-*, *::after, *::before {
+*::after, *::before {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
 
 a {
-  color: #7b9d6f;
+  color: var(--indigo);
   text-decoration: none;
 }
 
@@ -64,6 +39,9 @@ Main Components
 
 -------------------------------- */
 .cd-horizontal-timeline {
+  font-size: 14px;
+  font-family: "Fira Sans", sans-serif;
+  color: #f8f8f8;
   opacity: 1;
   margin: 2em auto;
   -webkit-transition: opacity 0.2s;
@@ -108,14 +86,14 @@ Main Components
 
 .cd-horizontal-timeline .events-wrapper::before {
   left: 0;
-  background-image: -webkit-gradient(linear, left top, right top, from(#f8f8f8), to(rgba(248, 248, 248, 0)));
-  background-image: linear-gradient(to right, #f8f8f8, rgba(248, 248, 248, 0));
+  background-image: -webkit-gradient(linear, left top, right top, from(#000000), to(rgba(248, 248, 248, 0)));
+  background-image: linear-gradient(to right, #000000, rgba(248, 248, 248, 0));
 }
 
 .cd-horizontal-timeline .events-wrapper::after {
   right: 0;
-  background-image: -webkit-gradient(linear, right top, left top, from(#f8f8f8), to(rgba(248, 248, 248, 0)));
-  background-image: linear-gradient(to left, #f8f8f8, rgba(248, 248, 248, 0));
+  background-image: -webkit-gradient(linear, right top, left top, from(#000000), to(rgba(248, 248, 248, 0)));
+  background-image: linear-gradient(to left, #000000, rgba(248, 248, 248, 0));
 }
 
 .cd-horizontal-timeline .filling-line {
@@ -126,7 +104,7 @@ Main Components
   top: 0;
   height: 100%;
   width: 100%;
-  background-color: #7b9d6f;
+  background-color: var(--purple);
   -webkit-transform-origin: left center;
           transform-origin: left center;
   -webkit-transition: -webkit-transform 0.3s;
@@ -143,7 +121,7 @@ Main Components
   top: 49px;
   height: 2px;
   /* width will be set using JavaScript */
-  background: #dfdfdf;
+  background: var(--outline);
   -webkit-transition: -webkit-transform 0.4s;
   transition: -webkit-transform 0.4s;
   transition: transform 0.4s;
@@ -155,9 +133,8 @@ Main Components
   bottom: 0;
   z-index: 2;
   text-align: center;
-  font-size: 1.3rem;
   padding-bottom: 15px;
-  color: #383838;
+  color: var(--gray);
   /* fix bug on Safari - text flickering while timeline translates */
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
@@ -177,8 +154,8 @@ Main Components
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  border: 2px solid #dfdfdf;
-  background-color: #f8f8f8;
+  border: 2px solid var(--purple);
+  background-color: var(--purple);
   -webkit-transition: background-color 0.3s, border-color 0.3s;
   transition: background-color 0.3s, border-color 0.3s;
 }
@@ -188,12 +165,12 @@ Main Components
 }
 
 .cd-horizontal-timeline .events a.selected::after {
-  background-color: #7b9d6f;
-  border-color: #7b9d6f;
+  background-color: var(--indigo);
+  border-color: var(--indigo);
 }
 
 .cd-horizontal-timeline .events a.older-event::after {
-  border-color: #7b9d6f;
+  border-color: var(--indigo);
 }
 
 .cd-horizontal-timeline .events-content {
@@ -251,7 +228,6 @@ Main Components
 
 .cd-horizontal-timeline .events-content h2 {
   font-weight: bold;
-  font-size: 2.6rem;
   font-family: "Playfair Display", serif;
   font-weight: 700;
   line-height: 1.2;
@@ -268,7 +244,6 @@ Main Components
 }
 
 .cd-horizontal-timeline .events-content p {
-  font-size: 1.4rem;
   color: #959595;
 }
 
@@ -277,8 +252,8 @@ Main Components
 }
 
 .no-touch .cd-horizontal-timeline .events a:hover::after {
-  background-color: #7b9d6f;
-  border-color: #7b9d6f;
+  background-color: var(--indigo);
+  border-color: var(--indigo);
 }
 
 .cd-timeline-navigation a {
@@ -292,7 +267,7 @@ Main Components
   height: 34px;
   width: 34px;
   border-radius: 50%;
-  border: 2px solid #dfdfdf;
+  border: 2px solid var(--secondary);
   /* replace text with an icon */
   overflow: hidden;
   color: transparent;
@@ -336,7 +311,7 @@ Main Components
 }
 
 .no-touch .cd-timeline-navigation a:hover {
-  border-color: #7b9d6f;
+  border-color: var(--indigo);
 }
 
 .no-touch .cd-timeline-navigation a.inactive:hover {
@@ -345,7 +320,7 @@ Main Components
 
 @media only screen and (min-width: 1100px) {
   .cd-horizontal-timeline {
-    margin: 6em auto;
+    margin: 1em auto;
   }
   .cd-horizontal-timeline::before {
     /* never visible - this is used in jQuery to check the current MQ */
@@ -355,13 +330,13 @@ Main Components
 
 @media only screen and (min-width: 768px) {
   .cd-horizontal-timeline .events-content h2 {
-    font-size: 7rem;
+    font-size: 24px;
   }
   .cd-horizontal-timeline .events-content em {
-    font-size: 2rem;
+    font-size: 16px;
   }
   .cd-horizontal-timeline .events-content p {
-    font-size: 1.8rem;
+    font-size: 14px;
   }
 }
 
