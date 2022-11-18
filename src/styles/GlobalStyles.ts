@@ -40,5 +40,6 @@ export default createGlobalStyle`
     --twitter-dark-hover: #011017;
     --twitter-light-hover: #2c8ed6;
     --purple: #4d3daa;
+    --dark-blue: #6db0f7;
   }
 `;
