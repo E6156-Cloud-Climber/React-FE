@@ -80,6 +80,7 @@ Main Components
   opacity: 1;
   margin: 2em auto;
   transition: opacity 0.2s;
+  width: 100%;
   
   &::before {
   /* never visible - this is used in jQuery to check the current MQ */

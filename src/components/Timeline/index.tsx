@@ -5,6 +5,23 @@ import { randomItems } from "./test";
 
 var unitWidth = 60;
 
+interface RespTimeline {
+  position_id: number;
+  posts: Array<RespPost>;
+  links: any;
+}
+interface RespPost {
+  id: number;
+  phase_id: number;
+  user_id: number;
+  position_id: number;
+  date: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  links: any;
+}
+
 interface TimelineProps {}
 
 interface TimelineState {
@@ -54,9 +71,59 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       fillingLineScaleX: 0,
     };
   }
+  updateByRespTimeline(tl: RespTimeline) {
+    let items = new Array<itemType>();
+    for (let idx = 0; idx < tl.posts.length; idx++) {
+      let p = tl.posts[idx];
+      let date = new Date(p.updated_at);
+      date.setMonth(idx + 1);
+      let month = date.toLocaleString('default', { month: 'long' });
+      let day = date.toLocaleString('default', { day: 'numeric' });
+      let year = date.getFullYear();
+      items.push({
+        dataDate: `${day}/${date.getMonth()}/${year}`,
+        title: `phase: ${p.phase_id}`,
+        desc: p.description || '',
+        // desc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.',
+        left: 0,
+        subtitle: `${month} ${day}, ${year}`,
+        myClass: idx == 0 ? 'selected' : '',
+      });
+    }
+    items.forEach((item, index, items) => {
+      item.left = this.getItemPosition(
+        items[0],
+        item,
+        this.minLapse(items),
+        unitWidth
+      );
+    });
+    let minLapse = this.minLapse(items);
+    let timelineWidth = this.getTimelineWidth(items, minLapse, unitWidth);
+    this.setState({
+      timelineTranslateX: 0,
+      items: items,
+      timelineWidth: timelineWidth,
+    });
+    this.updateFilling(0);
+    return items;
+  }
 
   componentDidMount() {
     this.updateFilling(0);
+    fetch('http://54.84.3.38:3000/api/users/1/timelines')
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((result) => {
+        result.timelines.forEach(
+          (el: RespTimeline) => this.updateByRespTimeline(el)
+          // this.setState({ items: randomItems })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   render() {
     return (
@@ -125,7 +192,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
               <a
                 href="#0"
                 className={
-                  "prev" + (this.state.isReachPrevLimit ? " inactive" : "")
+                  'prev' + (this.state.isReachPrevLimit ? ' inactive' : '')
                 }
                 onClick={() => this.handleClickOnPrev()}
               >
@@ -136,7 +203,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
               <a
                 href="#0"
                 className={
-                  "next" + (this.state.isReachNextLimit ? " inactive" : "")
+                  'next' + (this.state.isReachNextLimit ? ' inactive' : '')
                 }
                 onClick={() => this.handleClickOnNext()}
               >
@@ -152,19 +219,19 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
   getParsedDate(item: itemType) {
     let date, time;
     let singleDate = item.dataDate,
-      dateComp = singleDate.split("T");
+      dateComp = singleDate.split('T');
     if (dateComp.length > 1) {
       //both DD/MM/YEAR and time are provided
-      date = dateComp[0].split("/");
-      time = dateComp[1].split(":");
-    } else if (dateComp[0].indexOf(":") >= 0) {
+      date = dateComp[0].split('/');
+      time = dateComp[1].split(':');
+    } else if (dateComp[0].indexOf(':') >= 0) {
       //only time is provide
-      date = ["2000", "0", "0"];
-      time = dateComp[0].split(":");
+      date = ['2000', '0', '0'];
+      time = dateComp[0].split(':');
     } else {
       //only DD/MM/YEAR
-      date = dateComp[0].split("/");
-      time = ["0", "0"];
+      date = dateComp[0].split('/');
+      time = ['0', '0'];
     }
     let newDate = new Date(
       Number(date[2]),
@@ -224,13 +291,14 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       timeSpanNorm = timeSpan / minLapse,
       timeSpanNorm = Math.round(timeSpanNorm) + 4,
       totalWidth = timeSpanNorm * unitWidth;
+    console.log(timeSpan, minLapse, timeSpanNorm, totalWidth);
 
     return totalWidth;
   }
 
   getCompactDateStr(date: Date) {
-    let month = date.toLocaleString("default", { month: "short" });
-    let day = date.toLocaleString("default", { day: "numeric" });
+    let month = date.toLocaleString('default', { month: 'short' });
+    let day = date.toLocaleString('default', { day: 'numeric' });
     return `${day} ${month}`;
   }
 
@@ -271,12 +339,12 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     let { items, prevEventIndex, visibleEventIndex } = this.state;
     items[prevEventIndex].myClass = items[prevEventIndex].myClass.replace(
       /leave-left|leave-right/gi,
-      ""
+      ''
     );
 
     items[visibleEventIndex].myClass = items[visibleEventIndex].myClass.replace(
       /enter-left|enter-right/gi,
-      ""
+      ''
     );
 
     this.setState({ items: items });
@@ -289,11 +357,11 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     let { items } = this.state;
     let classEnetering, classLeaving;
     if (enteringEventIndex > leavingEventIndex) {
-      classEnetering = "selected enter-right";
-      classLeaving = "leave-left";
+      classEnetering = 'selected enter-right';
+      classLeaving = 'leave-left';
     } else {
-      classEnetering = "selected enter-left";
-      classLeaving = "leave-right";
+      classEnetering = 'selected enter-left';
+      classLeaving = 'leave-right';
     }
     items[leavingEventIndex].myClass = classLeaving;
     items[enteringEventIndex].myClass = classEnetering;

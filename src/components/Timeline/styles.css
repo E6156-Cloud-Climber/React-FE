@@ -46,6 +46,7 @@ Main Components
   margin: 2em auto;
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
+  width: 100%;
 }
 
 .cd-horizontal-timeline::before {
