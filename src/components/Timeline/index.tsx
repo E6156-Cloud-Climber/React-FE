@@ -5,7 +5,7 @@ import { randomItems } from "./test";
 
 var unitWidth = 60;
 
-interface RespTimeline {
+interface RespUserTimeline {
   position_id: number;
   posts: Array<RespPost>;
   links: any;
@@ -22,7 +22,50 @@ interface RespPost {
   links: any;
 }
 
-interface TimelineProps {}
+interface RespIdName {
+  id: number;
+  name: string;
+}
+
+interface RespPosition {
+  id: number;
+  company_id: number;
+  company: RespIdName;
+  name: string;
+  position_type: string;
+  active: boolean;
+  year: number;
+  link: string;
+}
+
+interface RespStatStr {
+  min: string;
+  max: string;
+  mid: string;
+}
+
+interface RespStatNum {
+  min: number;
+  max: number;
+  mid: number;
+}
+
+interface RespStatPhase {
+  phase_id: number;
+  phase: RespIdName;
+  total: number;
+  pass_cnt: number;
+  pass_rate: number;
+  date: RespStatStr;
+  duration: RespStatNum;
+}
+
+interface RespPositionTimeline {
+  position: RespPosition;
+  phases: Array<RespStatPhase>;
+}
+
+interface TimelineProps { }
 
 interface TimelineState {
   timelineTranslateX: number;
@@ -34,13 +77,14 @@ interface TimelineState {
   visibleEventIndex: number;
   prevEventIndex: number;
   fillingLineScaleX: number;
+  title: string;
 }
 
 interface itemType {
   myClass: string;
   dataDate: string;
   title: string;
-  subtitle: string;
+  subtitles: Array<string>;
   desc: string;
   left: number;
 }
@@ -69,24 +113,32 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       visibleEventIndex: 0,
       prevEventIndex: 0,
       fillingLineScaleX: 0,
+      title: 'Your Timeline'
     };
   }
-  updateByRespTimeline(tl: RespTimeline) {
+  updateByRespTimeline(tl_user: RespUserTimeline, tl_pos: RespPositionTimeline) {
     let items = new Array<itemType>();
-    for (let idx = 0; idx < tl.posts.length; idx++) {
-      let p = tl.posts[idx];
-      let date = new Date(p.updated_at);
-      date.setMonth(idx + 1);
+    for (let idx = 0; idx < tl_pos.phases.length; idx++) {
+      let phase = tl_pos.phases[idx];
+      let post = idx < tl_user.posts.length ? tl_user.posts[idx] : null;
+      let date = new Date(post ? post.date : phase.date.mid);
+      // date.setMonth(idx + 1);
       let month = date.toLocaleString('default', { month: 'long' });
       let day = date.toLocaleString('default', { day: 'numeric' });
       let year = date.getFullYear();
+      let formatDate = function (date: string) {
+        return new Date(date).toLocaleDateString('default', { year: 'numeric', month: 'short', day: 'numeric' })
+      }
       items.push({
         dataDate: `${day}/${date.getMonth()}/${year}`,
-        title: `phase: ${p.phase_id}`,
-        desc: p.description || '',
+        title: `Phase: ${phase.phase.name} ${!post ? '(Expected)' : ''}`,
+        desc: post ? post.description || 'No description' : 'No description',
         // desc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.',
         left: 0,
-        subtitle: `${month} ${day}, ${year}`,
+        subtitles: [
+          `pass rate: ${phase.pass_cnt || 0}/${phase.total || 0} (${(phase.pass_rate || 0) * 100}%) `,
+          `From ${formatDate(phase.date.min)} to ${formatDate(phase.date.max)} (median ${formatDate(phase.date.mid)})`,
+        ].concat(phase.duration ? [`Wait ${phase.duration.min} to ${phase.duration.max} (median ${phase.duration.mid}) days to the next phase`] : []),
         myClass: idx == 0 ? 'selected' : '',
       });
     }
@@ -104,6 +156,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       timelineTranslateX: 0,
       items: items,
       timelineWidth: timelineWidth,
+      title: `Your timeline for ${tl_pos.position.name} at ${tl_pos.position.company.name}`
     });
     this.updateFilling(0);
     return items;
@@ -111,15 +164,30 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
 
   componentDidMount() {
     this.updateFilling(0);
-    fetch('http://54.84.3.38:3000/api/users/1/timelines')
+    fetch('http://localhost:3003/api/users/1/timelines')
       .then((resp) => {
         return resp.json();
       })
       .then((result) => {
-        result.timelines.forEach(
-          (el: RespTimeline) => this.updateByRespTimeline(el)
-          // this.setState({ items: randomItems })
-        );
+        // result.timelines.forEach(
+        //   (el: RespTimeline) => this.updateByRespTimeline(el)
+        //   // this.setState({ items: randomItems })
+        // );
+        let tl_user = result.timelines[0];
+        fetch(`http://localhost:3005/api/composite/positions/${tl_user.position_id}/timeline`)
+          .then((resp) => {
+            return resp.json();
+          })
+          .then((tl_pos) => {
+            // result.timelines.forEach(
+            //   (el: RespTimeline) => this.updateByRespTimeline(el)
+            //   // this.setState({ items: randomItems })
+            // );
+            this.updateByRespTimeline(tl_user, tl_pos);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -128,6 +196,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
   render() {
     return (
       <section className="cd-horizontal-timeline">
+        <h5 style={{ textAlign: 'center' }}>{this.state.title}</h5>
         <div className="events-content">
           <ol>
             {this.state.items.map((item: itemType, index: number) => {
@@ -141,7 +210,11 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
                   }}
                 >
                   <h2>{item.title}</h2>
-                  <em>{item.subtitle}</em>
+                  {item.subtitles.map((subtitle: string) => {
+                    return (
+                      <em>{subtitle}</em>
+                    )
+                  })}
                   <p> {item.desc}</p>
                 </li>
               );
@@ -212,7 +285,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
             </li>
           </ul>
         </div>
-      </section>
+      </section >
     );
   }
   //based on http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
@@ -285,9 +358,9 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     );
 
     var timeSpan = this.daydiff(
-        this.getParsedDate(items[0]),
-        this.getParsedDate(items[items.length - 1])
-      ),
+      this.getParsedDate(items[0]),
+      this.getParsedDate(items[items.length - 1])
+    ),
       timeSpanNorm = timeSpan / minLapse,
       timeSpanNorm = Math.round(timeSpanNorm) + 4,
       totalWidth = timeSpanNorm * unitWidth;
