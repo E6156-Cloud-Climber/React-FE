@@ -1,0 +1,422 @@
+[
+  {
+    "id": 14,
+    "phase_id": 6,
+    "user_id": 2,
+    "position_id": 1,
+    "date": "2022-09-12T04:00:00.000Z",
+    "description": "",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/6",
+      "user": "/users/2",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 6, "name": "Verbal Offer" },
+    "phase_name": "Verbal Offer",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 13,
+    "phase_id": 4,
+    "user_id": 2,
+    "position_id": 1,
+    "date": "2022-09-05T04:00:00.000Z",
+    "description": "Don't come for this company!",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/4",
+      "user": "/users/2",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 4, "name": "Virtual Onsite" },
+    "phase_name": "Virtual Onsite",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 12,
+    "phase_id": 3,
+    "user_id": 2,
+    "position_id": 1,
+    "date": "2022-08-30T04:00:00.000Z",
+    "description": "As I sat in the waiting room, I couldn't help but feel a mix of excitement and nervousness. I had spent hours preparing for this interview and now it was finally time to showcase my skills and experience. I tried to calm my nerves by taking deep breaths and reminding myself of all the hard work I had put in to get to this point. When the interviewer called my name, I stood up confidently and followed them into the office. I shook their hand and sat down, ready to impress them with my knowledge and enthusiasm.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/3",
+      "user": "/users/2",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 3, "name": "Phone Screen" },
+    "phase_name": "Phone Screen",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 11,
+    "phase_id": 2,
+    "user_id": 2,
+    "position_id": 1,
+    "date": "2022-08-21T04:00:00.000Z",
+    "description": "It's the worst experience",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/2",
+      "user": "/users/2",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 2, "name": "Online Assessment" },
+    "phase_name": "Online Assessment",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 10,
+    "phase_id": 1,
+    "user_id": 2,
+    "position_id": 1,
+    "date": "2022-08-10T04:00:00.000Z",
+    "description": "Some of the specific questions I was asked included: \"Describe a time when you had to debug a complex problem in your code,\" and \"Explain how you would design a scalable and efficient system to handle a large amount of data.\"",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/1",
+      "user": "/users/2",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 1, "name": "Applied" },
+    "phase_name": "Applied",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 9,
+    "phase_id": 8,
+    "user_id": 1,
+    "position_id": 2,
+    "date": "2022-09-17T04:00:00.000Z",
+    "description": "This was followed by an in-person interview at Facebook's headquarters, where I met with a panel of individuals who asked me more in-depth technical questions and gave me the opportunity to showcase my skills and expertise in project management. I was particularly impressed by the level of detail and preparation that went into the interview, and I felt that the interviewer was genuinely interested in my thoughts and ideas.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/8",
+      "user": "/users/1",
+      "position": "/positions/2"
+    },
+    "phase": { "id": 8, "name": "Rejected" },
+    "phase_name": "Rejected",
+    "position": {
+      "id": 2,
+      "company_id": 2,
+      "name": "Software Development Engineer",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/2" },
+      "company": { "id": 2, "name": "Amazon" }
+    },
+    "position_name": "Software Development Engineer",
+    "company_name": "Amazon"
+  },
+  {
+    "id": 8,
+    "phase_id": 4,
+    "user_id": 1,
+    "position_id": 2,
+    "date": "2022-09-12T04:00:00.000Z",
+    "description": "The process began with an initial phone screen, during which I was asked to solve a series of technical problems and answer questions about my background and experience. This was followed by an in-person interview at one of Amazon's offices, where I met with a panel of individuals who asked me more in-depth technical questions and gave me the opportunity to showcase my skills and expertise. Overall, I found the Amazon interview process to be thorough and well-structured, and I am grateful for the opportunities it has provided.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/4",
+      "user": "/users/1",
+      "position": "/positions/2"
+    },
+    "phase": { "id": 4, "name": "Virtual Onsite" },
+    "phase_name": "Virtual Onsite",
+    "position": {
+      "id": 2,
+      "company_id": 2,
+      "name": "Software Development Engineer",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/2" },
+      "company": { "id": 2, "name": "Amazon" }
+    },
+    "position_name": "Software Development Engineer",
+    "company_name": "Amazon"
+  },
+  {
+    "id": 7,
+    "phase_id": 2,
+    "user_id": 1,
+    "position_id": 2,
+    "date": "2022-08-25T04:00:00.000Z",
+    "description": "My experience interviewing with Google was truly unforgettable. The company is known for its rigorous and challenging interview process, and I was eager to prove myself. The interviews were incredibly well-structured and focused on testing my technical skills as well as my ability to think on my feet and solve complex problems. I was impressed by the caliber of the interviewers and their ability to ask thoughtful and insightful questions. Overall, I felt like I was able to demonstrate my abilities and knowledge, and I am grateful for the opportunity to have interviewed with such a prestigious company.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/2",
+      "user": "/users/1",
+      "position": "/positions/2"
+    },
+    "phase": { "id": 2, "name": "Online Assessment" },
+    "phase_name": "Online Assessment",
+    "position": {
+      "id": 2,
+      "company_id": 2,
+      "name": "Software Development Engineer",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/2" },
+      "company": { "id": 2, "name": "Amazon" }
+    },
+    "position_name": "Software Development Engineer",
+    "company_name": "Amazon"
+  },
+  {
+    "id": 6,
+    "phase_id": 1,
+    "user_id": 1,
+    "position_id": 2,
+    "date": "2022-08-15T04:00:00.000Z",
+    "description": "My interview experience in the tech industry has been both challenging and rewarding. I have had the opportunity to meet with a variety of talented and knowledgeable individuals who have pushed me to think outside the box and demonstrate my skills and expertise. The interviews have been thorough and have given me the chance to showcase my technical abilities as well as my communication and problem-solving skills. Overall, I have found the interview process in the tech industry to be both demanding and exciting, and I am grateful for the opportunities it has provided.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/1",
+      "user": "/users/1",
+      "position": "/positions/2"
+    },
+    "phase": { "id": 1, "name": "Applied" },
+    "phase_name": "Applied",
+    "position": {
+      "id": 2,
+      "company_id": 2,
+      "name": "Software Development Engineer",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/2" },
+      "company": { "id": 2, "name": "Amazon" }
+    },
+    "position_name": "Software Development Engineer",
+    "company_name": "Amazon"
+  },
+  {
+    "id": 5,
+    "phase_id": 6,
+    "user_id": 1,
+    "position_id": 1,
+    "date": "2022-09-23T04:00:00.000Z",
+    "description": "I have been working in the tech industry for the past five years and have gained a wealth of experience in various roles. My background in computer science and engineering has given me the technical expertise to excel in positions ranging from software development to project management. In my current role, I have been responsible for leading a team of developers in the creation of a new product, and I have successfully delivered on time and within budget. I am excited about the opportunity to join your team and apply my skills and experience to help drive your company's success.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/6",
+      "user": "/users/1",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 6, "name": "Verbal Offer" },
+    "phase_name": "Verbal Offer",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 4,
+    "phase_id": 4,
+    "user_id": 1,
+    "position_id": 1,
+    "date": "2022-09-21T04:00:00.000Z",
+    "description": "As a software development engineer, I am passionate about using my skills and knowledge to create innovative and effective solutions. I have a strong background in computer science, with experience in a variety of programming languages and frameworks. In my current role, I have been responsible for designing and implementing new features for our web-based application, and I have consistently received positive feedback from my teammates and managers. I am excited about the opportunity to join your team and contribute to your ongoing projects.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/4",
+      "user": "/users/1",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 4, "name": "Virtual Onsite" },
+    "phase_name": "Virtual Onsite",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 3,
+    "phase_id": 3,
+    "user_id": 1,
+    "position_id": 1,
+    "date": "2022-09-10T04:00:00.000Z",
+    "description": "You can decide what you want to do in life, but I suggest doing something that creates. Something that leaves a tangible thing once you're done. That way even after you're gone, you will still live on in the things you created.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/3",
+      "user": "/users/1",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 3, "name": "Phone Screen" },
+    "phase_name": "Phone Screen",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 2,
+    "phase_id": 2,
+    "user_id": 1,
+    "position_id": 1,
+    "date": "2022-09-05T04:00:00.000Z",
+    "description": "I recently discovered I could make fudge with just chocolate chips, sweetened condensed milk, vanilla extract, and a thick pot on slow heat. I tried it with dark chocolate chunks and I tried it with semi-sweet chocolate chips. It's better with both kinds. It comes out pretty bad with just the dark chocolate. The best add-ins are crushed almonds and marshmallows -- what you get from that is Rocky Road. It takes about twenty minutes from start to fridge, and then it takes about six months to work off the twenty pounds you gain from eating it. All things in moderation, friends. All things in moderation.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/2",
+      "user": "/users/1",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 2, "name": "Online Assessment" },
+    "phase_name": "Online Assessment",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  },
+  {
+    "id": 1,
+    "phase_id": 1,
+    "user_id": 1,
+    "position_id": 1,
+    "date": "2022-08-30T04:00:00.000Z",
+    "description": "Twenty-five hours had passed since the incident. It seemed to be a lot longer than that. That twenty-five hours seemed more like a week in her mind. The fact that she still was having trouble comprehending exactly what took place wasn't helping the matter. She thought if she could just get a little rest the entire incident might make a little more sense.",
+    "created_at": "2022-12-14T01:39:14.000Z",
+    "updated_at": "2022-12-14T01:39:14.000Z",
+    "links": {
+      "phase": "/phases/1",
+      "user": "/users/1",
+      "position": "/positions/1"
+    },
+    "phase": { "id": 1, "name": "Applied" },
+    "phase_name": "Applied",
+    "position": {
+      "id": 1,
+      "company_id": 1,
+      "name": "Software Engineer, Recent Grad",
+      "position_type": "Full-Time",
+      "year": 2022,
+      "active": 1,
+      "link": "",
+      "links": { "company": "/companies/1" },
+      "company": { "id": 1, "name": "Apple" }
+    },
+    "position_name": "Software Engineer, Recent Grad",
+    "company_name": "Apple"
+  }
+]

@@ -21,7 +21,7 @@ const Main: React.FC = () => {
     <Container>
       <Header>
         <button>
-          <BackIcon />
+          <BellIcon />
         </button>
 
         <ProfileInfo>

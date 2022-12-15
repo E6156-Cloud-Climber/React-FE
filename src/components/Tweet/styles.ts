@@ -33,10 +33,6 @@ export const RocketseatIcon = styled(Retweet)`
 
   margin-left: 35px;
   margin-right: 9px;
-
-  > path: {
-    fill: var(--gray);
-  }
 `;
 
 export const Body = styled.div`
@@ -72,11 +68,13 @@ export const Content = styled.div`
 export const Header = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
 
   font-size: 15px;
   white-space: nowrap;
 
   > strong {
+    flex-shrink: 0;
     margin-right: 5px;
   }
 
@@ -85,11 +83,14 @@ export const Header = styled.div`
     color: var(--gray);
   }
 
-  > strong,
-  span {
+  > span {
+    position: relative;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    &:hover {
+      overflow: visible;
+    }
   }
 `;
 
