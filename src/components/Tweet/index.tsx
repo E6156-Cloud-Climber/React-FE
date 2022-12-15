@@ -46,7 +46,7 @@ const Tweet: React.FC<PropsType> = () => {
   const [posts, setPosts] = useState<Array<PostType>>([]);
   const [postCounter, setPostCounter] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(2);
+  const [postsPerPage] = useState(5);
 
   // validate
   // 1. remove empty posts
@@ -63,15 +63,14 @@ const Tweet: React.FC<PropsType> = () => {
   };
 
   useEffect(() => {
-    fetch(gen_url('/composite/posts'))
+    fetch(
+      gen_url('/composite/posts', 0, { page: currentPage, limit: postsPerPage })
+    )
       .then((resp) => resp.json())
       .then((res) => {
         validatePosts(res.posts);
-        const indexOfLastPost = currentPage * postsPerPage;
-        const indexOfFirstPost = indexOfLastPost - postsPerPage;
-        const currentPosts = res.posts.slice(indexOfFirstPost, indexOfLastPost);
-        setPosts(currentPosts);
-        setPostCounter(res.posts.length);
+        setPosts(res.posts);
+        setPostCounter(res.total);
       })
       .catch((err) => console.log(err));
   }, [currentPage, postsPerPage]);
