@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import moment from 'moment';
 import { gen_url } from '../../conn';
 import {
@@ -17,9 +17,11 @@ import {
   CommentIcon,
   RetweetIcon,
   LikeIcon,
+  MyPaginate,
 } from './styles';
 import { nextTick } from 'process';
 import Post from '../Post';
+import ReactPaginate from 'react-paginate';
 
 interface UserType {
   avatar: string;
@@ -40,8 +42,11 @@ interface PostType {
 interface PropsType {}
 
 const Tweet: React.FC<PropsType> = () => {
-  const [likeCounter, setLikeCounter] = useState(0);
+  const postRef = useRef<HTMLDivElement>(null);
   const [posts, setPosts] = useState<Array<PostType>>([]);
+  const [postCounter, setPostCounter] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(2);
 
   // validate
   // 1. remove empty posts
@@ -52,22 +57,31 @@ const Tweet: React.FC<PropsType> = () => {
       }
     });
   };
+  const paginate = (selectedItem: { selected: number }) => {
+    postRef?.current?.scrollIntoView();
+    setCurrentPage(selectedItem.selected + 1);
+  };
 
   useEffect(() => {
     fetch(gen_url('/composite/posts'))
       .then((resp) => resp.json())
       .then((res) => {
         validatePosts(res.posts);
-        setPosts(res.posts);
+        const indexOfLastPost = currentPage * postsPerPage;
+        const indexOfFirstPost = indexOfLastPost - postsPerPage;
+        const currentPosts = res.posts.slice(indexOfFirstPost, indexOfLastPost);
+        setPosts(currentPosts);
+        setPostCounter(res.posts.length);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [currentPage, postsPerPage]);
 
   return (
     <>
-      {posts.map((post, index) => (
-        <Container key={index}>
-          {/* {post.retweet ? (
+      {posts.length ? (
+        posts.map((post, index) => (
+          <Container ref={postRef} key={index}>
+            {/* {post.retweet ? (
             <Retweeted>
               <RocketseatIcon />
               You retweeted
@@ -76,24 +90,24 @@ const Tweet: React.FC<PropsType> = () => {
             ''
           )} */}
 
-          <Body>
-            {/* <Avatar>
+            <Body>
+              {/* <Avatar>
               <img src={post.avatar} alt={post.company} />
             </Avatar> */}
 
-            <Content>
-              <Header>
-                <strong>{post.company_name}</strong>
-                <span title={post.position_name}>{post.position_name}</span>
-                <Dot />
-                <span title={post.phase_name}>{post.phase_name}</span>
-                <Dot />
-                <time>{moment(post.updated_at).fromNow()}</time>
-              </Header>
+              <Content>
+                <Header>
+                  <strong>{post.company_name}</strong>
+                  <span title={post.position_name}>{post.position_name}</span>
+                  <Dot />
+                  <span title={post.phase_name}>{post.phase_name}</span>
+                  <Dot />
+                  <time>{moment(post.updated_at).fromNow()}</time>
+                </Header>
 
-              <Description>{post.description}</Description>
+                <Description>{post.description}</Description>
 
-              {/* <ImageContent>
+                {/* <ImageContent>
                 {post.postimage ? (
                   <img src={post.postimage} alt="Imge Post" />
                 ) : (
@@ -101,7 +115,7 @@ const Tweet: React.FC<PropsType> = () => {
                 )}
               </ImageContent> */}
 
-              {/* <Icons>
+                {/* <Icons>
                 <Status>
                   <CommentIcon />
                   {post.commentscount}
@@ -115,10 +129,24 @@ const Tweet: React.FC<PropsType> = () => {
                   {post.likecount + likeCounter}
                 </Status>
               </Icons> */}
-            </Content>
-          </Body>
-        </Container>
-      ))}
+              </Content>
+            </Body>
+          </Container>
+        ))
+      ) : (
+        <h1 className="loading"> Loading...</h1>
+      )}
+      <MyPaginate
+        onPageChange={paginate}
+        pageCount={Math.ceil(postCounter / postsPerPage)}
+        previousLabel={'Prev'}
+        nextLabel={'Next'}
+        // containerClassName={'pagination'}
+        // pageLinkClassName={'page-number'}
+        // previousLinkClassName={'page-number'}
+        // nextLinkClassName={'page-number'}
+        // activeLinkClassName={'active'}
+      />
     </>
   );
 };
