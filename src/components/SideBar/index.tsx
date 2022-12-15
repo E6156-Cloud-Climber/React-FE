@@ -4,6 +4,7 @@ import StickyBox from 'react-sticky-box';
 import List from '../List';
 import FollowSuggestion from '../FollowSuggestion';
 import News from '../News';
+import { gen_url } from '../../conn';
 
 import {
   Container,
@@ -20,24 +21,26 @@ interface ItemType {
 
 interface SideBarState {
   items: Array<ItemType>;
-  search: string
+  search: string;
 }
 
 class SideBar extends React.Component<any, SideBarState> {
   constructor(props: any) {
-    super(props)
+    super(props);
 
     this.state = {
       items: [
-        { position: "SDE · Finance", company: "Hudson River Trading" },
-        { position: "PM · Entertainment", company: "TikTok" },
-        { position: "SDE · Entertainment", company: "Netflix" },
+        { position: 'SDE · Finance', company: 'Hudson River Trading' },
+        { position: 'PM · Entertainment', company: 'TikTok' },
+        { position: 'SDE · Entertainment', company: 'Netflix' },
       ],
-      search: ''
-    }
+      search: '',
+    };
   }
   searchUpdate(keyword: string) {
-    fetch(`http://localhost:3005/api/composite/positions?limit=10&search_string=${keyword}`)
+    fetch(
+      gen_url('/composite/positions', 0, { limit: 10, search_string: keyword })
+    )
       .then((resp) => {
         return resp.json();
       })
@@ -46,9 +49,9 @@ class SideBar extends React.Component<any, SideBarState> {
           items: result.positions.map((pos: any) => {
             return {
               position: pos.name,
-              company: pos.company.name
+              company: pos.company.name,
             };
-          })
+          }),
         });
       })
       .catch((err) => {
@@ -56,19 +59,26 @@ class SideBar extends React.Component<any, SideBarState> {
       });
   }
   componentDidMount() {
-    this.searchUpdate('')
+    this.searchUpdate('');
   }
   updateInput(e: any) {
     this.setState({
-      search: e.target.value
-    })
+      search: e.target.value,
+    });
   }
   render() {
     return (
       <Container>
         <SearchWrapper>
-          <SearchInput placeholder="Search Job" onChange={this.updateInput.bind(this)} />
-          <SearchIcon onClick={() => { this.searchUpdate(this.state.search) }} />
+          <SearchInput
+            placeholder="Search Job"
+            onChange={this.updateInput.bind(this)}
+          />
+          <SearchIcon
+            onClick={() => {
+              this.searchUpdate(this.state.search);
+            }}
+          />
         </SearchWrapper>
 
         <StickyBox>
@@ -84,13 +94,9 @@ class SideBar extends React.Component<any, SideBarState> {
 
             <List
               title="Trending jobs"
-              elements={
-                this.state.items.map((item: ItemType) => {
-                  return (
-                    <News header={item.position} topic={item.company} />
-                  )
-                })
-              }
+              elements={this.state.items.map((item: ItemType) => {
+                return <News header={item.position} topic={item.company} />;
+              })}
             />
           </Body>
         </StickyBox>

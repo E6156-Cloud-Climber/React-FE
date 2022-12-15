@@ -2,6 +2,7 @@ import * as React from "react";
 import { isCompositeComponent } from "react-dom/test-utils";
 import "./styles.css";
 import { randomItems } from "./test";
+import { gen_url } from '../../conn';
 
 var unitWidth = 60;
 
@@ -65,7 +66,7 @@ interface RespPositionTimeline {
   phases: Array<RespStatPhase>;
 }
 
-interface TimelineProps { }
+interface TimelineProps {}
 
 interface TimelineState {
   timelineTranslateX: number;
@@ -113,10 +114,13 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       visibleEventIndex: 0,
       prevEventIndex: 0,
       fillingLineScaleX: 0,
-      title: 'Your Timeline'
+      title: 'Your Timeline',
     };
   }
-  updateByRespTimeline(tl_user: RespUserTimeline, tl_pos: RespPositionTimeline) {
+  updateByRespTimeline(
+    tl_user: RespUserTimeline,
+    tl_pos: RespPositionTimeline
+  ) {
     let items = new Array<itemType>();
     for (let idx = 0; idx < tl_pos.phases.length; idx++) {
       let phase = tl_pos.phases[idx];
@@ -127,8 +131,12 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       let day = date.toLocaleString('default', { day: 'numeric' });
       let year = date.getFullYear();
       let formatDate = function (date: string) {
-        return new Date(date).toLocaleDateString('default', { year: 'numeric', month: 'short', day: 'numeric' })
-      }
+        return new Date(date).toLocaleDateString('default', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
+      };
       items.push({
         dataDate: `${day}/${date.getMonth()}/${year}`,
         title: `Phase: ${phase.phase.name} ${!post ? '(Expected)' : ''}`,
@@ -136,9 +144,19 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
         // desc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.',
         left: 0,
         subtitles: [
-          `pass rate: ${phase.pass_cnt || 0}/${phase.total || 0} (${(phase.pass_rate || 0) * 100}%) `,
-          `From ${formatDate(phase.date.min)} to ${formatDate(phase.date.max)} (median ${formatDate(phase.date.mid)})`,
-        ].concat(phase.duration ? [`Wait ${phase.duration.min} to ${phase.duration.max} (median ${phase.duration.mid}) days to the next phase`] : []),
+          `pass rate: ${phase.pass_cnt || 0}/${phase.total || 0} (${
+            (phase.pass_rate || 0) * 100
+          }%) `,
+          `From ${formatDate(phase.date.min)} to ${formatDate(
+            phase.date.max
+          )} (median ${formatDate(phase.date.mid)})`,
+        ].concat(
+          phase.duration
+            ? [
+                `Wait ${phase.duration.min} to ${phase.duration.max} (median ${phase.duration.mid}) days to the next phase`,
+              ]
+            : []
+        ),
         myClass: idx == 0 ? 'selected' : '',
       });
     }
@@ -156,7 +174,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       timelineTranslateX: 0,
       items: items,
       timelineWidth: timelineWidth,
-      title: `Your timeline for ${tl_pos.position.name} at ${tl_pos.position.company.name}`
+      title: `Your timeline for ${tl_pos.position.name} at ${tl_pos.position.company.name}`,
     });
     this.updateFilling(0);
     return items;
@@ -164,7 +182,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
 
   componentDidMount() {
     this.updateFilling(0);
-    fetch('http://localhost:3003/api/users/1/timelines')
+    fetch(gen_url('/users/1/timelines', 3))
       .then((resp) => {
         return resp.json();
       })
@@ -174,7 +192,9 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
         //   // this.setState({ items: randomItems })
         // );
         let tl_user = result.timelines[0];
-        fetch(`http://localhost:3005/api/composite/positions/${tl_user.position_id}/timeline`)
+        fetch(
+          gen_url(`/composite/positions/${tl_user.position_id}/timeline`, 0)
+        )
           .then((resp) => {
             return resp.json();
           })
@@ -211,9 +231,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
                 >
                   <h2>{item.title}</h2>
                   {item.subtitles.map((subtitle: string) => {
-                    return (
-                      <em>{subtitle}</em>
-                    )
+                    return <em>{subtitle}</em>;
                   })}
                   <p> {item.desc}</p>
                 </li>
@@ -285,7 +303,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
             </li>
           </ul>
         </div>
-      </section >
+      </section>
     );
   }
   //based on http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
@@ -358,9 +376,9 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     );
 
     var timeSpan = this.daydiff(
-      this.getParsedDate(items[0]),
-      this.getParsedDate(items[items.length - 1])
-    ),
+        this.getParsedDate(items[0]),
+        this.getParsedDate(items[items.length - 1])
+      ),
       timeSpanNorm = timeSpan / minLapse,
       timeSpanNorm = Math.round(timeSpanNorm) + 4,
       totalWidth = timeSpanNorm * unitWidth;
