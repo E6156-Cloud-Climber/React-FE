@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
+import { gen_url } from '../../conn';
 import {
   Container,
   TextArea,
@@ -15,7 +16,7 @@ import {
 interface PostProps {}
 
 interface PostState {
-  interviewPhase: number;
+  interviewPhaseId: number;
   postContent: string;
   company: string;
   position: string;
@@ -25,7 +26,7 @@ interface PostState {
 
 class Post extends React.Component<PostProps, PostState> {
   state: PostState = {
-    interviewPhase: 0,
+    interviewPhaseId: 0,
     postContent: '',
     company: '',
     position: '',
@@ -33,22 +34,54 @@ class Post extends React.Component<PostProps, PostState> {
     isAnimating: false,
   };
 
+  getValidateInput = (input: PostState) => {
+    return {
+      company_name: input.company.trim(),
+      position_name: input.position.trim(),
+      phase_id: input.interviewPhaseId,
+      description: input.postContent.trim(),
+    };
+  };
+
+  resetUserInput = () => {
+    this.setState({
+      interviewPhaseId: 0,
+      postContent: '',
+      company: '',
+      position: '',
+      stage: Stage.Post,
+      isAnimating: true,
+    });
+  };
+
   handleSubmitButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (this.state.stage === Stage.Post) {
       this.setState({ stage: Stage.Position, isAnimating: true }, () =>
         console.log(this.state)
       );
-    } else {
-      fetch('http://54.84.3.38:3000/api/users/2/posts', { method: 'POST' })
-        .then((resp) => {
-          return resp.json();
-        })
-        .then((result) => {
-          console.log(result);
+    } else if (this.state.stage === Stage.Position) {
+      let input = this.getValidateInput(this.state);
+      fetch(gen_url('/composite/posts/1'), {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      })
+        .then((resp) => resp.json())
+        .then((res) => {
+          console.log(res);
+          if ('post_id' in res) {
+            this.resetUserInput();
+            alert('Done!');
+          }
         })
         .catch((err) => {
           console.log(err);
+          alert('Ops! Something is wrong!');
         });
+    } else {
     }
   };
 
@@ -57,8 +90,8 @@ class Post extends React.Component<PostProps, PostState> {
       console.log(this.state)
     );
   };
-  handleInterviewPhaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ interviewPhase: parseInt(e.currentTarget.value) }, () =>
+  handleinterviewPhaseIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ interviewPhaseId: parseInt(e.currentTarget.value) }, () =>
       console.log(this.state)
     );
   };
@@ -123,12 +156,13 @@ class Post extends React.Component<PostProps, PostState> {
                 aria-describedby="postHelp"
                 minLength={10}
                 rows={4}
+                value={this.state.postContent}
                 placeholder="Share your interview info..."
                 onChange={this.handleInterviewPostContentChange}
               />
               <Select
-                onChange={this.handleInterviewPhaseChange}
-                value={this.state.interviewPhase}
+                onChange={this.handleinterviewPhaseIdChange}
+                value={this.state.interviewPhaseId}
                 style={{ padding: '1rem 0', width: 'fit-content' }}
                 className="form-select"
               >
