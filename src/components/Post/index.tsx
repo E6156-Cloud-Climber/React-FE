@@ -23,9 +23,17 @@ interface PostState {
   stage: Stage;
   isAnimating: boolean;
   phases: Array<Phase>;
+  types: Array<Type>;
+  selectedType: number;
+  year: number;
 }
 
 interface Phase {
+  id: number;
+  name: string;
+}
+
+interface Type {
   id: number;
   name: string;
 }
@@ -39,6 +47,14 @@ class Post extends React.Component<PostProps, PostState> {
     stage: Stage.Post,
     isAnimating: false,
     phases: [],
+    selectedType: 1,
+    year: 2022,
+    types: [
+      { id: 1, name: 'Full-Time' },
+      { id: 2, name: 'Part-Time' },
+      { id: 3, name: 'Contractor' },
+      { id: 4, name: 'Intership' },
+    ],
   };
 
   getValidateInput = (input: PostState) => {
@@ -47,6 +63,8 @@ class Post extends React.Component<PostProps, PostState> {
       position_name: input.position.trim(),
       phase_id: input.interviewPhaseId,
       description: input.postContent.trim(),
+      position_type: input.selectedType,
+      year: input.year,
     };
   };
 
@@ -116,6 +134,12 @@ class Post extends React.Component<PostProps, PostState> {
     );
   };
 
+  handleSelectedTypeIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({ selectedType: parseInt(e.currentTarget.value) }, () =>
+      console.log(this.state)
+    );
+  };
+
   handleInterviewPostContentChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -130,6 +154,12 @@ class Post extends React.Component<PostProps, PostState> {
 
   handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ position: e.target.value }, () => console.log(this.state));
+  };
+
+  handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ year: parseInt(e.target.value) }, () =>
+      console.log(this.state)
+    );
   };
 
   componentDidMount() {
@@ -251,6 +281,38 @@ class Post extends React.Component<PostProps, PostState> {
                 style={{ fontSize: '1rem' }}
                 onChange={this.handlePositionChange}
               />
+              <label htmlFor="year" style={{ margin: '1rem 0' }}>
+                Estimated Onboard Year
+              </label>
+              <Input
+                type="number"
+                min="1900"
+                max="2099"
+                step="1"
+                id="year"
+                name="year"
+                placeholder="Enter the year..."
+                style={{ fontSize: '1rem' }}
+                value={this.state.year}
+                onChange={this.handleYearChange}
+              />
+              <label htmlFor="type" style={{ margin: '1rem 0' }}>
+                Job Type
+              </label>
+
+              <Select
+                onChange={this.handleSelectedTypeIdChange}
+                value={this.state.selectedType}
+                style={{ padding: '1rem 0', width: 'fit-content' }}
+                className="form-select"
+              >
+                <option value="0" disabled>
+                  Open this to select job type
+                </option>
+                {this.state.types.map(({ id, name }) => (
+                  <option value={id}>{name}</option>
+                ))}
+              </Select>
             </PositionContainer>
           </InputContainer>
           <SubmitContainer>
