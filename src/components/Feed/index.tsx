@@ -7,8 +7,9 @@ import { Container, Tab, Tweets } from './styles';
 const Feed: React.FC = () => {
   return (
     <Container>
-      <Tab>Posts</Tab>
+      <Tab>Timelines</Tab>
       <Timeline />
+      <Tab>Posts</Tab>
       <Tweets>
         <Tweet />
       </Tweets>

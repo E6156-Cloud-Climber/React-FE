@@ -12,8 +12,9 @@ import {
   Select,
   Input,
 } from './styles';
+import { Wrapper } from './styles'
 
-interface PostProps {}
+interface PostProps { }
 
 interface PostState {
   interviewPhaseId: number;
@@ -26,6 +27,8 @@ interface PostState {
   types: Array<Type>;
   selectedType: number;
   year: number;
+  link: string;
+  date: string;
 }
 
 interface Phase {
@@ -55,6 +58,8 @@ class Post extends React.Component<PostProps, PostState> {
       { id: 3, name: 'Contractor' },
       { id: 4, name: 'Intership' },
     ],
+    link: '',
+    date: '2022-01-01'
   };
 
   getValidateInput = (input: PostState) => {
@@ -65,6 +70,8 @@ class Post extends React.Component<PostProps, PostState> {
       description: input.postContent.trim(),
       position_type: input.selectedType,
       year: input.year,
+      link: input.link.trim(),
+      date: input.date
     };
   };
 
@@ -97,7 +104,7 @@ class Post extends React.Component<PostProps, PostState> {
         let input = this.getValidateInput(this.state);
         let user_id = getUserID();
         console.log('user_id:', user_id);
-        fetch(gen_url(`/composite/posts/${user_id}`), {
+        fetch(gen_url(`/composite/users/${user_id}/posts`), {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -111,6 +118,7 @@ class Post extends React.Component<PostProps, PostState> {
             if ('post_id' in res) {
               this.resetUserInput();
               alert('Done!');
+              window.location.reload();
             }
           })
           .catch((err) => {
@@ -162,6 +170,14 @@ class Post extends React.Component<PostProps, PostState> {
     );
   };
 
+  handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ link: e.target.value }, () => console.log(this.state));
+  };
+
+  handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ date: e.target.value }, () => console.log(this.state));
+  };
+
   componentDidMount() {
     fetch(gen_url('/phases', 3))
       .then((resp) => resp.json())
@@ -204,8 +220,8 @@ class Post extends React.Component<PostProps, PostState> {
                     ? 'cd-enter-left selected'
                     : 'cd-leave-left'
                   : this.state.stage === Stage.Post
-                  ? 'selected'
-                  : ''
+                    ? 'selected'
+                    : ''
               }
             >
               <TextArea
@@ -218,19 +234,28 @@ class Post extends React.Component<PostProps, PostState> {
                 placeholder="Share your interview info..."
                 onChange={this.handleInterviewPostContentChange}
               />
-              <Select
-                onChange={this.handleinterviewPhaseIdChange}
-                value={this.state.interviewPhaseId}
-                style={{ padding: '1rem 0', width: 'fit-content' }}
-                className="form-select"
-              >
-                <option value="0" disabled>
-                  Open this to select interview phase
-                </option>
-                {this.state.phases.map(({ id, name }) => (
-                  <option value={id}>{name}</option>
-                ))}
-              </Select>
+              <Wrapper>
+                <Select
+                  onChange={this.handleinterviewPhaseIdChange}
+                  value={this.state.interviewPhaseId}
+                  style={{ padding: '1rem 0', width: 'fit-content' }}
+                  className="form-select"
+                >
+                  <option value="0" disabled>
+                    Open this to select interview phase
+                  </option>
+                  {this.state.phases.map(({ id, name }) => (
+                    <option value={id}>{name}</option>
+                  ))}
+                </Select>
+                <Input
+                  type="date"
+                  id="date"
+                  name="date"
+                  style={{ fontSize: '1rem' }}
+                  onChange={this.handleDateChange}
+                />
+              </Wrapper>
             </PostContainer>
             <PositionContainer
               onAnimationEnd={() => {
@@ -242,8 +267,8 @@ class Post extends React.Component<PostProps, PostState> {
                     ? 'cd-enter-right selected'
                     : 'cd-leave-right'
                   : this.state.stage === Stage.Position
-                  ? 'selected'
-                  : ''
+                    ? 'selected'
+                    : ''
               }
             >
               <button
@@ -313,6 +338,19 @@ class Post extends React.Component<PostProps, PostState> {
                   <option value={id}>{name}</option>
                 ))}
               </Select>
+              <label htmlFor="link" style={{ margin: '1rem 0' }}>
+                Job Link
+              </label>
+              <Input
+                type="text"
+                id="link"
+                name="link"
+                placeholder="Enter the job link..."
+                minLength={1}
+                size={60}
+                style={{ fontSize: '1rem' }}
+                onChange={this.handleLinkChange}
+              />
             </PositionContainer>
           </InputContainer>
           <SubmitContainer>

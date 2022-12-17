@@ -17,6 +17,7 @@ import {
 interface ItemType {
   position: string;
   company: string;
+  type: string;
 }
 
 interface SideBarState {
@@ -30,9 +31,9 @@ class SideBar extends React.Component<any, SideBarState> {
 
     this.state = {
       items: [
-        { position: 'SDE · Finance', company: 'Hudson River Trading' },
-        { position: 'PM · Entertainment', company: 'TikTok' },
-        { position: 'SDE · Entertainment', company: 'Netflix' },
+        { position: 'SDE · Finance', company: 'Hudson River Trading', type: 'Full-Time' },
+        // { position: 'PM · Entertainment', company: 'TikTok' },
+        // { position: 'SDE · Entertainment', company: 'Netflix' },
       ],
       search: '',
     };
@@ -50,6 +51,7 @@ class SideBar extends React.Component<any, SideBarState> {
             return {
               position: pos.name,
               company: pos.company.name,
+              type: pos.position_type
             };
           }),
         });
@@ -95,7 +97,7 @@ class SideBar extends React.Component<any, SideBarState> {
             <List
               title="Trending jobs"
               elements={this.state.items.map((item: ItemType) => {
-                return <News header={item.position} topic={item.company} />;
+                return <News header={item.position + ' · ' + item.type} topic={item.company} />;
               })}
             />
           </Body>

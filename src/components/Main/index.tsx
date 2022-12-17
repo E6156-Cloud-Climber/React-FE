@@ -25,8 +25,8 @@ const Main: React.FC = () => {
         </button>
 
         <ProfileInfo>
-          <strong>Explore job posts</strong>
-          <span>432 posts</span>
+          <strong>Explore Job Timelines</strong>
+          {/* <span>432 posts</span> */}
         </ProfileInfo>
       </Header>
       <Post />

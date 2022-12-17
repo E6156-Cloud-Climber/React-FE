@@ -4,6 +4,7 @@ import "./styles.css";
 import { randomItems } from "./test";
 import { gen_url } from '../../conn';
 import { getUserID } from '../../getUserID';
+import { Container } from '../Post/styles'
 
 var unitWidth = 60;
 
@@ -15,7 +16,7 @@ interface RespUserTimeline {
 interface RespPost {
   id: number;
   phase_id: number;
-  user_id: number;
+  user_id: string;
   position_id: number;
   date: string;
   description: string;
@@ -67,7 +68,7 @@ interface RespPositionTimeline {
   phases: Array<RespStatPhase>;
 }
 
-interface TimelineProps {}
+interface TimelineProps { }
 
 interface TimelineState {
   timelineTranslateX: number;
@@ -108,7 +109,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     this.state = {
       timelineTranslateX: 0,
       timelineWidth: timelineWidth,
-      items: items,
+      items: [],
       eventsWrapperRef: ref,
       isReachPrevLimit: true,
       isReachNextLimit: false,
@@ -139,14 +140,13 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
         });
       };
       items.push({
-        dataDate: `${day}/${date.getMonth()}/${year}`,
+        dataDate: `${day}/${date.getMonth() + 1}/${year}`,
         title: `Phase: ${phase.phase.name} ${!post ? '(Expected)' : ''}`,
         desc: post ? post.description || 'No description' : 'No description',
         // desc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.',
         left: 0,
         subtitles: [
-          `pass rate: ${phase.pass_cnt || 0}/${phase.total || 0} (${
-            (phase.pass_rate || 0) * 100
+          `pass rate: ${phase.pass_cnt || 0}/${phase.total || 0} (${(phase.pass_rate || 0) * 100
           }%) `,
           `From ${formatDate(phase.date.min)} to ${formatDate(
             phase.date.max
@@ -154,8 +154,8 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
         ].concat(
           phase.duration
             ? [
-                `Wait ${phase.duration.min} to ${phase.duration.max} (median ${phase.duration.mid}) days to the next phase`,
-              ]
+              `Wait ${phase.duration.min} to ${phase.duration.max} (median ${phase.duration.mid}) days to the next phase`,
+            ]
             : []
         ),
         myClass: idx == 0 ? 'selected' : '',
@@ -178,11 +178,14 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
       title: `Your timeline for ${tl_pos.position.name} at ${tl_pos.position.company.name}`,
     });
     this.updateFilling(0);
+    console.log(tl_user)
+    console.log(tl_pos)
+    console.log(items)
     return items;
   }
 
   componentDidMount() {
-    this.updateFilling(0);
+    // this.updateFilling(0);
     let user_id = getUserID();
     fetch(gen_url(`/users/${user_id}/timelines`, 3))
       .then((resp) => {
@@ -206,6 +209,7 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
             //   // this.setState({ items: randomItems })
             // );
             this.updateByRespTimeline(tl_user, tl_pos);
+            this.updateFilling(0);
           })
           .catch((err) => {
             console.log(err);
@@ -217,95 +221,101 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
   }
   render() {
     return (
-      <section className="cd-horizontal-timeline">
-        <h5 style={{ textAlign: 'center' }}>{this.state.title}</h5>
-        <div className="events-content">
-          <ol>
-            {this.state.items.map((item: itemType, index: number) => {
-              return (
-                <li
-                  key={index}
-                  className={item.myClass}
-                  data-date={item.dataDate}
-                  onAnimationEnd={() => {
-                    this.cleanEnterAndLeaveClass();
-                  }}
-                >
-                  <h2>{item.title}</h2>
-                  {item.subtitles.map((subtitle: string) => {
-                    return <em>{subtitle}</em>;
-                  })}
-                  <p> {item.desc}</p>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-
-        <div className="timeline">
-          <div className="events-wrapper" ref={this.state.eventsWrapperRef}>
-            <div
-              className="events"
-              style={{
-                width: this.state.timelineWidth,
-                transform: `translateX(${this.state.timelineTranslateX}px)`,
-              }}
-            >
+      <Container>
+        <section className="cd-horizontal-timeline">
+          <h5 style={{ textAlign: 'center' }}>
+            {this.state.items.length > 0 ? this.state.title : 'Share your posts to see the timelines'}
+          </h5>
+          {this.state.items.length > 0 &&
+            <div className="events-content" style={{ textAlign: 'left' }}>
               <ol>
                 {this.state.items.map((item: itemType, index: number) => {
-                  let leavingEventIndex = this.state.visibleEventIndex;
                   return (
-                    <li key={index}>
-                      <a
-                        href="#0"
-                        data-date={item.dataDate}
-                        className={item.myClass}
-                        style={{ left: item.left }}
-                        onClick={() => {
-                          this.handleClickOnEvent(leavingEventIndex, index);
-                        }}
-                      >
-                        {this.getCompactDateStr(this.getParsedDate(item))}
-                      </a>
+                    <li
+                      key={index}
+                      className={item.myClass}
+                      data-date={item.dataDate}
+                      onAnimationEnd={() => {
+                        this.cleanEnterAndLeaveClass();
+                      }}
+                    >
+                      <h2>{item.title}</h2>
+                      {item.subtitles.map((subtitle: string) => {
+                        return <em>{subtitle}</em>;
+                      })}
+                      <p> {item.desc}</p>
                     </li>
                   );
                 })}
               </ol>
-
-              <span
-                className="filling-line"
-                aria-hidden="true"
-                style={{ transform: `scaleX(${this.state.fillingLineScaleX})` }}
-              ></span>
             </div>
-          </div>
+          }
 
-          <ul className="cd-timeline-navigation">
-            <li>
-              <a
-                href="#0"
-                className={
-                  'prev' + (this.state.isReachPrevLimit ? ' inactive' : '')
-                }
-                onClick={() => this.handleClickOnPrev()}
+          <div className="timeline">
+            <div className="events-wrapper" ref={this.state.eventsWrapperRef}>
+              <div
+                className="events"
+                style={{
+                  width: this.state.timelineWidth,
+                  transform: `translateX(${this.state.timelineTranslateX}px)`,
+                }}
               >
-                Prev
-              </a>
-            </li>
-            <li>
-              <a
-                href="#0"
-                className={
-                  'next' + (this.state.isReachNextLimit ? ' inactive' : '')
-                }
-                onClick={() => this.handleClickOnNext()}
-              >
-                Next
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+                <ol>
+                  {this.state.items.map((item: itemType, index: number) => {
+                    let leavingEventIndex = this.state.visibleEventIndex;
+                    return (
+                      <li key={index}>
+                        <a
+                          href="#0"
+                          data-date={item.dataDate}
+                          className={item.myClass}
+                          style={{ left: item.left }}
+                          onClick={() => {
+                            this.handleClickOnEvent(leavingEventIndex, index);
+                          }}
+                        >
+                          {this.getCompactDateStr(this.getParsedDate(item))}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ol>
+
+                <span
+                  className="filling-line"
+                  aria-hidden="true"
+                  style={{ transform: `scaleX(${this.state.fillingLineScaleX})` }}
+                ></span>
+              </div>
+            </div>
+
+            <ul className="cd-timeline-navigation">
+              <li>
+                <a
+                  href="#0"
+                  className={
+                    'prev' + (this.state.isReachPrevLimit ? ' inactive' : '')
+                  }
+                  onClick={() => this.handleClickOnPrev()}
+                >
+                  Prev
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#0"
+                  className={
+                    'next' + (this.state.isReachNextLimit ? ' inactive' : '')
+                  }
+                  onClick={() => this.handleClickOnNext()}
+                >
+                  Next
+                </a>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </Container>
     );
   }
   //based on http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
@@ -378,9 +388,9 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
     );
 
     var timeSpan = this.daydiff(
-        this.getParsedDate(items[0]),
-        this.getParsedDate(items[items.length - 1])
-      ),
+      this.getParsedDate(items[0]),
+      this.getParsedDate(items[items.length - 1])
+    ),
       timeSpanNorm = timeSpan / minLapse,
       timeSpanNorm = Math.round(timeSpanNorm) + 4,
       totalWidth = timeSpanNorm * unitWidth;
