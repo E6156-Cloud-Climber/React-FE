@@ -3,6 +3,7 @@ import { isCompositeComponent } from "react-dom/test-utils";
 import "./styles.css";
 import { randomItems } from "./test";
 import { gen_url } from '../../conn';
+import { getUserID } from '../../getUserID';
 
 var unitWidth = 60;
 
@@ -182,7 +183,8 @@ class Timeline extends React.Component<TimelineProps, TimelineState> {
 
   componentDidMount() {
     this.updateFilling(0);
-    fetch(gen_url('/users/1/timelines', 3))
+    let user_id = getUserID();
+    fetch(gen_url(`/users/${user_id}/timelines`, 3))
       .then((resp) => {
         return resp.json();
       })

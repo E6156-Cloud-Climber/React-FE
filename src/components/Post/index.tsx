@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { gen_url } from '../../conn';
+import { getUserID } from '../../getUserID';
 import {
   Container,
   TextArea,
@@ -22,6 +22,12 @@ interface PostState {
   position: string;
   stage: Stage;
   isAnimating: boolean;
+  phases: Array<Phase>;
+}
+
+interface Phase {
+  id: number;
+  name: string;
 }
 
 class Post extends React.Component<PostProps, PostState> {
@@ -32,6 +38,7 @@ class Post extends React.Component<PostProps, PostState> {
     position: '',
     stage: Stage.Post,
     isAnimating: false,
+    phases: [],
   };
 
   getValidateInput = (input: PostState) => {
@@ -56,32 +63,45 @@ class Post extends React.Component<PostProps, PostState> {
 
   handleSubmitButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (this.state.stage === Stage.Post) {
-      this.setState({ stage: Stage.Position, isAnimating: true }, () =>
-        console.log(this.state)
-      );
+      if (this.state.postContent.trim() === '') {
+        alert('Empty post content!');
+      } else if (this.state.interviewPhaseId === 0) {
+        alert('Please select interview phase!');
+      } else {
+        this.setState({ stage: Stage.Position, isAnimating: true });
+      }
     } else if (this.state.stage === Stage.Position) {
-      let input = this.getValidateInput(this.state);
-      fetch(gen_url('/composite/posts/1'), {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(input),
-      })
-        .then((resp) => resp.json())
-        .then((res) => {
-          console.log(res);
-          if ('post_id' in res) {
-            this.resetUserInput();
-            alert('Done!');
-          }
+      if (this.state.company.trim() === '') {
+        alert('Please enter the company!');
+      } else if (this.state.position.trim() === '') {
+        alert('Please enter the position!');
+      } else {
+        let input = this.getValidateInput(this.state);
+        let user_id = getUserID();
+        console.log('user_id:', user_id);
+        fetch(gen_url(`/composite/posts/${user_id}`), {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(input),
         })
-        .catch((err) => {
-          console.log(err);
-          alert('Ops! Something is wrong!');
-        });
+          .then((resp) => resp.json())
+          .then((res) => {
+            console.log(res);
+            if ('post_id' in res) {
+              this.resetUserInput();
+              alert('Done!');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            alert('Ops! Something is wrong!');
+          });
+      }
     } else {
+      throw Error(`Invalid Stage=${this.state.stage}`);
     }
   };
 
@@ -111,6 +131,14 @@ class Post extends React.Component<PostProps, PostState> {
   handlePositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ position: e.target.value }, () => console.log(this.state));
   };
+
+  componentDidMount() {
+    fetch(gen_url('/phases', 3))
+      .then((resp) => resp.json())
+      .then((res) => {
+        this.setState({ phases: res });
+      });
+  }
 
   render() {
     return (
@@ -169,11 +197,9 @@ class Post extends React.Component<PostProps, PostState> {
                 <option value="0" disabled>
                   Open this to select interview phase
                 </option>
-                <option value="1">OA</option>
-                <option value="2">VO (technical) </option>
-                <option value="3">VO (BQ) </option>
-                <option value="4">offer</option>
-                <option value="-1">other</option>
+                {this.state.phases.map(({ id, name }) => (
+                  <option value={id}>{name}</option>
+                ))}
               </Select>
             </PostContainer>
             <PositionContainer
@@ -234,7 +260,7 @@ class Post extends React.Component<PostProps, PostState> {
               className="btn btn-primary float-right m-2"
               style={{ minWidth: '90px' }}
             >
-              {this.state.stage === Stage.Post ? 'Submit >' : 'Finish '}
+              {this.state.stage === Stage.Post ? 'Next >' : 'Finish '}
             </button>
           </SubmitContainer>
         </form>
@@ -242,6 +268,5 @@ class Post extends React.Component<PostProps, PostState> {
     );
   }
 }
- 
 
 export default Post;
