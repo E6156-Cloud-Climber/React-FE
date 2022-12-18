@@ -52,9 +52,9 @@ const Tweet: React.FC<PropsType> = () => {
   // 1. remove empty posts
   const validatePosts = (posts: Array<PostType>) => {
     posts.map((post, index) => {
-      if (post.description === '') {
-        posts.splice(index, 1);
-      }
+      // if (!post.description) {
+      //   post.description = 'No description'
+      // }
     });
   };
   const paginate = (selectedItem: { selected: number }) => {
